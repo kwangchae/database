@@ -1,30 +1,31 @@
-from flask import Flask
+from flask import Flask, render_template, request, redirect
 import sqlite3
 
 app = Flask(__name__)
 
-def get_db_connection():
-    conn = sqlite3.connect('restaurant_menu.db')
-    conn.row_factory = sqlite3.Row
-    return conn
-
 @app.route('/')
 @app.route('/restaurants/')
 def showRestaurants():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    items = cursor.execute('SELECT name FROM restaurant').fetchall()
-    conn.close()
-    mydoc = "<h1>All Restaurants</h1>"
-    mydoc += "<ul>"
-    for item in items:
-        mydoc += f"<li>{item['name']}</li>"
-    mydoc += "</ul>"
-    return mydoc
+    db = sqlite3.connect('./restaurant_menu.db')
+    cursor = db.cursor()
+    items = cursor.execute('SELECT id, name FROM restaurant').fetchall()
+    db.close()
+    return render_template('restaurant.html', restaurants = items)
 
-@app.route('/restaurant/new/')
+@app.route('/restaurant/new/', methods=['GET', 'POST'])
 def newRestaurant():
-    return "This page will be for making a new restaurant"
+    if request.method == 'POST':
+        db = sqlite3.connect('./restaurant_menu.db')
+        cursor = db.cursor()
+        cursor.execute('INSERT INTO restaurant (name) VALUES (?)', (request.form['name'],))
+        db.commit()
+        db.close()
+        return redirect('/restaurants/')
+    return render_template('restaurant_new.html')
+
+@app.route('/restaurant/<int:restaurant_id>/')
+def showMenu(restaurant_id):
+    return f"This page is the menu for restaurant {restaurant_id}"
 
 @app.route('/restaurant/delete/<int:restaurant_id>/')
 def deleteRestaurant(restaurant_id):

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Restaurants</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <h1>Wonderful Restaurants!</h1>
+        <p>
+            <a href="/restaurant/new/">Add a new restaurant</a>
+        </p>
+        <ul>
+            {% for restaurant in restaurants %}
+            <li>
+                <a href="/restaurant/{{ restaurant[0] }}/">{{ restaurant[1] }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>
