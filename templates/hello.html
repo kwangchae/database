@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>welcome to my page</title>
+        <meta charset="UTF-8">
+        <style>
+            h1 {
+                color:blueviolet;
+            }
+        </style>
+    </head>
+    <body>
+        {% if name %}
+        <h1>{{ name }} 홈페이지에 오신 것을 환영합니다.</h1>
+        {% else %}
+        <h1>홈페이지에 오신 것을 환영합니다.</h1>
+        {% endif %}
+    </body>
+</html>
